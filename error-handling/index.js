@@ -8,6 +8,7 @@ module.exports = (app) => {
     // whenever you call next(err), this middleware will handle the error
     // always logs the error
     console.error("ERROR", req.method, req.path, err);
+    //!AQUI AGREGAMOS EL ERRORhANDLING DE JWT PARA QUE EN LUGAR DE ERROR 500 ENVIE 401
 
     // only render if the error ocurred before sending the response
     if (!res.headersSent) {
