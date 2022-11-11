@@ -10,4 +10,7 @@ router.use("/auth", authRoutes)
 const gameRoutes = require("./game.routes")
 router.use("/game", gameRoutes)
 
+const eventRoutes = require("./event.routes")
+router.use("/event", eventRoutes)
+
 module.exports = router;
