@@ -40,9 +40,39 @@ router.get("/:eventid",  async (req, res, next) => {  //! isAuthenticated???
     }
 })
 
+// PATCH "/api/event/:eventid" => modificar un event por su id
+router.patch("/:eventid", isAuthenticated, async (req, res, next) => {
+    const {eventid} = req.params
+    const { location } = req.body
+    //! A ver como modifico a los jugadores
+    
+    try {
+        await Event.findByIdAndUpdate(eventid, { location: location })
+        res.status(200).json("Event updated")
+        
+    } catch (error) {
+        next(error)
+    }
 
 
 
+})  
+
+// DELETE "/api/event/:eventid" => modificar un event por su id
+router.delete("/:eventid", isAuthenticated, async (req, res, next) => {
+    const {eventid} = req.params
+        
+    try {
+        await Event.findByIdAndDelete(eventid)
+        res.status(200).json("Event deleted")
+        
+    } catch (error) {
+        next(error)
+    }
+
+
+
+})  
 
 
 module.exports = router;
