@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const Game = require("../models/Game.model");
+// const Game = require("../models/Game.model");
 const axios = require("axios")
 
 
@@ -15,10 +15,11 @@ router.get("/", async (req,res, next)=>{
     }
 })
 
-// GET "/api/game/:gameid" => recibir la lista de juegos de la API
+// GET "/api/game/:gameid" => recibir un solo juego de la API
 router.get("/:gameid", async (req,res, next)=>{
+    const {gameid} = req.params
+    
     try {
-        const {gameid} = req.params
         const response = await axios.get(`https://api.boardgameatlas.com/api/search?id=${gameid}&client_id=${process.env.CLIENT_ID}`)
         
         
