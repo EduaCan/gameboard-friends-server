@@ -32,4 +32,18 @@ router.patch("/:commentid", isAuthenticated, async (req, res, next) => {
         next(error)
     }
 })
+
+// DELETE "/api/comment/:commentid" => modificar un comment
+router.delete("/:commentid", isAuthenticated, async (req, res, next) => {
+    const {commentid}= req.params
+    try {
+        await Comment.findByIdAndDelete(commentid)
+        res.status(200).json("Comment deleted")
+        
+    } catch (error) {
+        next(error)
+    }
+})
+
+
 module.exports = router;
