@@ -18,10 +18,9 @@ router.get("/", async (req,res, next)=>{
 // GET "/api/game/:gameid" => recibir un solo juego de la API
 router.get("/:gameid", async (req,res, next)=>{
     const {gameid} = req.params
-    
+
     try {
-        const response = await axios.get(`https://api.boardgameatlas.com/api/search?id=${gameid}&client_id=${process.env.CLIENT_ID}`)
-        
+        const response = await axios.get(`https://api.boardgameatlas.com/api/search?ids=${gameid}&client_id=${process.env.CLIENT_ID}`)
         
         res.status(200).json(response.data.games[0])
     } catch (error) {

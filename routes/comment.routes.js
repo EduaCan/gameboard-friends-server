@@ -2,11 +2,25 @@ const router = require("express").Router()
 const isAuthenticated = require("../middlewares/auth.middlewares");
 const Comment = require("../models/Comment.model");
 
+// GET "/api/comment/:gameid" => crear un comment para un juego y agregar a la BD
+router.get("/:gameid", isAuthenticated, async (req, res, next) => {
+    const {gameid}= req.params
+    try {
+        const response = await Comment.find({idGame: gameid}).populate("idUser")
+        console.log("COMMENTS",response)
+        res.status(200).json(response)
+    } catch (error) {
+        next(error)
+    }
+
+})
+
+
 // POST "/api/comment/:gameid" => crear un comment para un juego y agregar a la BD
 router.post("/:gameid", isAuthenticated, async (req, res, next) => {
     const {content} = req.body
     const {gameid}= req.params
-    //! la misma ruta deberia valer para crear comments de eventos
+    //! la misma ruta deberia valer para crear comments de eventos?
     const newComment = {
         content: content,
         idUser: req.payload._id,

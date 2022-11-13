@@ -28,11 +28,24 @@ router.post("/:gameid", isAuthenticated, async (req, res, next) => {
 })
 
 // GET "/api/event/:eventid" => encontrar un event por su id
-router.get("/:eventid",  async (req, res, next) => {  //! isAuthenticated???
+router.get("/:eventid",  isAuthenticated, async (req, res, next) => {  //! isAuthenticated???
     const {eventid} = req.params
 
     try {
         const foundEvent = await Event.findById(eventid).populate("players")
+        
+        res.status(200).json(foundEvent)
+    } catch (error) {
+        next(error)
+    }
+})
+
+// GET "/api/event/:gameid" => encontrar eventos del juago por gameid
+router.get("/:gameid", isAuthenticated,  async (req, res, next) => {  
+    const {gameid} = req.params
+
+    try {
+        const foundEvent = await Event.find({game: gameid}).populate("players")
         
         res.status(200).json(foundEvent)
     } catch (error) {
