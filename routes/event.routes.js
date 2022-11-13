@@ -40,8 +40,8 @@ router.get("/:eventid",  isAuthenticated, async (req, res, next) => {  //! isAut
     }
 })
 
-// GET "/api/event/:gameid" => encontrar eventos del juago por gameid
-router.get("/:gameid", isAuthenticated,  async (req, res, next) => {  
+// GET "/api/event/game/:gameid" => encontrar eventos del juego por gameid
+router.get("/game/:gameid", isAuthenticated,  async (req, res, next) => {  
     const {gameid} = req.params
 
     try {
@@ -62,6 +62,22 @@ router.patch("/:eventid", isAuthenticated, async (req, res, next) => {
     try {
         await Event.findByIdAndUpdate(eventid, { location: location })
         res.status(200).json("Event updated")
+        
+    } catch (error) {
+        next(error)
+    }
+
+
+
+})  
+
+// PATCH "/api/event/:eventid/addplayer" => Agregar un player a un event por su id (eventid)
+router.patch("/:eventid/addplayer", isAuthenticated, async (req, res, next) => {
+    const {eventid} = req.params
+    
+    try {
+        await Event.findByIdAndUpdate(eventid,  {$push: {players: req.payload._id} })
+        res.status(200).json("Player Added")
         
     } catch (error) {
         next(error)
