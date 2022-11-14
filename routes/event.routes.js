@@ -11,11 +11,11 @@ router.post("/:gameid", isAuthenticated, async (req, res, next) => {
     const {gameid} = req.params
     
     try {
-        const userCreator = await User.findOne({username : req.payload.username})
+        
         
         const newEvent = {
             location: location,
-            players: [userCreator._id],
+            players: req.payload._id,
             game: gameid
         }
 
@@ -27,18 +27,6 @@ router.post("/:gameid", isAuthenticated, async (req, res, next) => {
 
 })
 
-// GET "/api/event/:eventid" => encontrar un event por su id
-router.get("/:eventid",  isAuthenticated, async (req, res, next) => {  //! isAuthenticated???
-    const {eventid} = req.params
-
-    try {
-        const foundEvent = await Event.findById(eventid).populate("players")
-        
-        res.status(200).json(foundEvent)
-    } catch (error) {
-        next(error)
-    }
-})
 
 // GET "/api/event/game/:gameid" => encontrar eventos del juego por gameid
 router.get("/game/:gameid", isAuthenticated,  async (req, res, next) => {  
@@ -46,6 +34,33 @@ router.get("/game/:gameid", isAuthenticated,  async (req, res, next) => {
 
     try {
         const foundEvent = await Event.find({game: gameid}).populate("players")
+        
+        res.status(200).json(foundEvent)
+    } catch (error) {
+        next(error)
+    }
+})
+
+// GET "/api/event/user/" => encontrar eventos del usuario
+router.get("/user", isAuthenticated,  async (req, res, next) => {  
+   
+
+    try {
+        const foundEvents = await Event.find({$in: {players: req.payload._id}})
+        
+        res.status(200).json(foundEvents)
+        // res.status(200).json(req.payload) $in
+    } catch (error) {
+        next(error)
+    }
+})
+
+// GET "/api/event/:eventid" => encontrar un event por su id
+router.get("/:eventid",  isAuthenticated, async (req, res, next) => {  //! isAuthenticated???
+    const {eventid} = req.params
+
+    try {
+        const foundEvent = await Event.findById(eventid).populate("players")
         
         res.status(200).json(foundEvent)
     } catch (error) {
@@ -76,7 +91,7 @@ router.patch("/:eventid/addplayer", isAuthenticated, async (req, res, next) => {
     const {eventid} = req.params
     
     try {
-        await Event.findByIdAndUpdate(eventid,  {$push: {players: req.payload._id} })
+        await Event.findByIdAndUpdate(eventid,  {$addToSet: {players: req.payload._id} })
         res.status(200).json("Player Added")
         
     } catch (error) {
@@ -87,7 +102,7 @@ router.patch("/:eventid/addplayer", isAuthenticated, async (req, res, next) => {
 
 })  
 
-// DELETE "/api/event/:eventid" => modificar un event por su id
+// DELETE "/api/event/:eventid" => borrar un event por su id
 router.delete("/:eventid", isAuthenticated, async (req, res, next) => {
     const {eventid} = req.params
         
@@ -103,5 +118,20 @@ router.delete("/:eventid", isAuthenticated, async (req, res, next) => {
 
 })  
 
+//PATCH => "/api/event/:eventid" Quitar player de evento
+router.patch("/:eventid", isAuthenticated, async (req, res, next) => {
+    const {eventid} = req.params
+        
+    try {
+        await Event.findByIdAndUptate(eventid, {$pull: {players:req.payload.username }})
+        res.status(200).json("Event deleted")
+        
+    } catch (error) {
+        next(error)
+    }
+
+
+
+})
 
 module.exports = router;

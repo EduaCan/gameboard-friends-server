@@ -1,5 +1,4 @@
 const router = require("express").Router()
-// const Game = require("../models/Game.model");
 const axios = require("axios")
 
 
@@ -22,11 +21,13 @@ router.get("/:gameid", async (req,res, next)=>{
     try {
         const response = await axios.get(`https://api.boardgameatlas.com/api/search?ids=${gameid}&client_id=${process.env.CLIENT_ID}`)
         
-        res.status(200).json(response.data.games[0])
+        res.status(200).json(response.data.games)
     } catch (error) {
         next(error)
     }
 })
+
+//GET => Recibir unos cuantos juegos de la API
 
 
 

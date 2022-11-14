@@ -16,4 +16,7 @@ router.use("/event", eventRoutes)
 const commentRoutes = require("./comment.routes")
 router.use("/comment", commentRoutes)
 
+const userRoutes = require("./user.routes")
+router.use("/user", userRoutes)
+
 module.exports = router;

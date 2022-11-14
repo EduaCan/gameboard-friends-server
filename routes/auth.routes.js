@@ -91,9 +91,7 @@ router.post("/login", async (req, res, next) => {
         _id: foundUser._id,
         username : foundUser.username,
         email: foundUser.email,
-        role : foundUser.role,
-        avatar: foundUser.avatar,
-        favGames: foundUser.favGames
+        role : foundUser.role
       }
       //Creamos el token
       const authToken = jwt.sign(
@@ -108,6 +106,52 @@ router.post("/login", async (req, res, next) => {
     next(error)
   }
 })
+
+//PATCH "api/auth/newpassword" => Para que el usuario pueda cambiar la contraseña
+router.patch("/newpassword", isAuthenticated, async (req, res, next) => {
+  const { oldPassword, password, password2} = req.body
+
+  // Validar que todos los campos esten llenos
+  if (!oldPassword  || !password || !password2) {
+    res.status(400).json({ errorMessage: "You must fill all the fields" })
+    return; 
+  }
+  // Coincidan las dos contraseñas
+  if (password !== password2) {
+    res.status(400).json({ errorMessage: "Passwords don't match" })
+    return;
+  }
+  // Fortaleza de la contraseña
+  const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm;
+  if (passwordRegex.test(password) === false) {
+    res.status(400).json({ errorMessage: "Password must be 8 characters long, at least 1 Capital letter and 1 number"})
+    return;
+  }
+
+  try {
+    // Validar que la contraseña sea correcta
+    const foundUser = await User.findById(req.payload._id)
+    const isPasswordValid = await bcrypt.compare(oldPassword, foundUser.password)
+    if (isPasswordValid === false) {
+      res.status(400).json({errorMessage: "Wrong old Password"}) //! quitar P
+      return;
+    }
+
+    //codificar la contraseña
+    const salt = await bcrypt.genSalt(10)
+    const hashPassword = await bcrypt.hash(password, salt)
+
+    //contraseña actualizada
+    await User.findByIdAndUpdate(req.payload._id, {password: hashPassword})
+
+    res.status(200).json("Password Updated")
+
+  } catch (error) {
+    next(error)
+  }
+
+})
+
 
 // GET "/api/auth/verify" => para que el BE le diga al FE si el usuario ya ha sido validado
 router.get("/verify", isAuthenticated, (req, res, next) => {

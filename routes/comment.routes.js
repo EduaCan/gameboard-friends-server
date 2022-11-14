@@ -38,7 +38,6 @@ router.post("/:gameid", isAuthenticated, async (req, res, next) => {
 router.patch("/:commentid", isAuthenticated, async (req, res, next) => {
     const {content} = req.body
     const {commentid}= req.params
-    //! la misma ruta deberia valer para modificar comments de eventos
     try {
         await Comment.findByIdAndUpdate(commentid, { content: content })
         res.status(200).json("Coment updated")
