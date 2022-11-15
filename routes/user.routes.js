@@ -34,10 +34,12 @@ router.patch("/game/:gameid", isAuthenticated, async (req, res, next) => {
 })
 
 // GET "/user/favorites/" => Recibir la lista de juegos favoritos
-router.get("/favorites/", isAuthenticated, async (req, res, next) => {
+router.get("/favorites", isAuthenticated, async (req, res, next) => {
     try {
+        console.log(req.payload._id)
         const response = await User.findById(req.payload._id).select("favGames")
-        res.status(200).json(response)
+        console.log(response.favGames)
+        res.status(200).json(response.favGames)
     } catch (error) {
         next(error)
     }

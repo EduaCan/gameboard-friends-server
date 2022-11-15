@@ -46,7 +46,7 @@ router.get("/user", isAuthenticated,  async (req, res, next) => {
    
 
     try {
-        const foundEvents = await Event.find({$in: {players: req.payload._id}})
+        const foundEvents = await Event.find({$in: {players: req.payload._id}}).populate("players")
         
         res.status(200).json(foundEvents)
         // res.status(200).json(req.payload) $in
@@ -55,8 +55,8 @@ router.get("/user", isAuthenticated,  async (req, res, next) => {
     }
 })
 
-// GET "/api/event/:eventid" => encontrar un event por su id
-router.get("/:eventid",  isAuthenticated, async (req, res, next) => {  //! isAuthenticated???
+// GET "/api/event/details/:eventid" => encontrar un event por su id
+router.get("/details/:eventid",  isAuthenticated, async (req, res, next) => { 
     const {eventid} = req.params
 
     try {

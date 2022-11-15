@@ -9,6 +9,10 @@ const commentSchema = new Schema(
     idGame: {
         type: String,
       },
+      idEvent: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Event",
+      },
       idUser: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

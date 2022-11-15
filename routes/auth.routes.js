@@ -155,7 +155,6 @@ router.patch("/newpassword", isAuthenticated, async (req, res, next) => {
 
 // GET "/api/auth/verify" => para que el BE le diga al FE si el usuario ya ha sido validado
 router.get("/verify", isAuthenticated, (req, res, next) => {
-    // console.log("req.payload===", req.payload) 
 
   res.status(200).json({user: req.payload})
 })
