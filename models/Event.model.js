@@ -1,6 +1,5 @@
 const { Schema, model, mongoose } = require("mongoose");
 
-
 const eventSchema = new Schema(
   {
     location: {
@@ -10,7 +9,7 @@ const eventSchema = new Schema(
     },
     game: {
       type: String,
-      required: true
+      required: true,
     },
     players: [
       {
@@ -20,8 +19,7 @@ const eventSchema = new Schema(
     ],
   },
   {
-    // this second object adds extra properties: `createdAt` and `updatedAt`    
-    timestamps: true
+    timestamps: true,
   }
 );
 

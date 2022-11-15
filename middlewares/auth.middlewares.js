@@ -6,7 +6,6 @@ const isAuthenticated = jwt({
   algorithms: ["HS256"],
   requestProperty: "payload",
   getToken: (req) => {
-    // console.log("req.headers===", req.headers);
     //si no recibe token
     if (req.headers === undefined || req.headers.authorization === undefined) {
       console.log("no hay token");
@@ -30,8 +29,9 @@ const isAuthenticated = jwt({
 });
 
 //Middleware para comprobar si el user es admin
+//! aun por implementar
 const isUserAdmin = (payload) => {
   return payload.role !== "admin" && null;
 };
 
-module.exports = isAuthenticated
+module.exports = isAuthenticated;
