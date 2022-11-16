@@ -38,13 +38,13 @@ router.get("/game/:gameid", isAuthenticated, async (req, res, next) => {
 // GET "/api/event/user/" => encontrar eventos del usuario
 router.get("/user", isAuthenticated, async (req, res, next) => {
   try {
-    const foundEvents = await Event.find({
-      $in: { players: req.payload._id },
-    }).populate("players");
+    const foundEvents = await Event.find(
+       { players: req.payload._id },
+    ).populate("players");
 
     res.status(200).json(foundEvents);
   } catch (error) {
-    next(error);
+    next(error);   
   }
 });
 
@@ -88,15 +88,39 @@ router.patch("/:eventid/addplayer", isAuthenticated, async (req, res, next) => {
   }
 });
 
+// PATCH "/api/event/:eventid/removeplayer" => Agregar un player a un event por su id (eventid)
+router.patch("/:eventid/removeplayer", isAuthenticated, async (req, res, next) => {
+  const { eventid } = req.params;
+
+  try {
+    await Event.findByIdAndUpdate(eventid, {
+      $pull: { players: req.payload._id },
+    });
+    const playersArray = await Event.findById(eventid).select("players");
+    if (playersArray.players.length === 0) {
+      await Event.findByIdAndDelete(eventid)
+    res.status(200).json("Player Removed and Event Deleted");
+
+    }
+    res.status(200).json("Player Removed");
+  } catch (error) {
+    next(error);
+  }
+});
+
 // DELETE "/api/event/:eventid" => borrar un event por su id
 router.delete("/:eventid", isAuthenticated, async (req, res, next) => {
   const { eventid } = req.params;
 
-  try {
-    await Event.findByIdAndDelete(eventid);
-    res.status(200).json("Event deleted");
-  } catch (error) {
-    next(error);
+  if(req.payload.role === "admin") {
+    try {
+      await Event.findByIdAndDelete(eventid);
+      res.status(200).json("Event deleted");
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    res.status(200).json("Acces forbidden")
   }
 });
 
@@ -108,7 +132,7 @@ router.patch("/:eventid", isAuthenticated, async (req, res, next) => {
     await Event.findByIdAndUptate(eventid, {
       $pull: { players: req.payload.username },
     });
-    res.status(200).json("Event deleted");
+    res.status(200).json("Player deleted");
   } catch (error) {
     next(error);
   }

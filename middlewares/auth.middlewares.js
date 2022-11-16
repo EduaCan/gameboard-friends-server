@@ -28,10 +28,5 @@ const isAuthenticated = jwt({
   },
 });
 
-//Middleware para comprobar si el user es admin
-//! aun por implementar
-const isUserAdmin = (payload) => {
-  return payload.role !== "admin" && null;
-};
 
 module.exports = isAuthenticated;

@@ -15,6 +15,19 @@ router.patch("/game/:gameid", isAuthenticated, async (req, res, next) => {
   }
 });
 
+// PATCH "/user/game/favremove/:gameid" => quitar un game de favoritos
+router.patch("/game/favremove/:gameid", isAuthenticated, async (req, res, next) => {
+  const { gameid } = req.params;
+  try {
+    await User.findByIdAndUpdate(req.payload._id, {
+      $pull: { favGames: gameid },
+    });
+    res.status(200).json("Game added to Favorites");
+  } catch (error) {
+    next(error);
+  }
+});
+
 // GET "/user/favorites/" => Recibir la lista de juegos favoritos
 router.get("/favorites", isAuthenticated, async (req, res, next) => {
   try {
