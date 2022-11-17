@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const isAuthenticated = require("../middlewares/auth.middlewares");
+const isAdmin = require("../middlewares/isAdmin.middlewares");
+
 const User = require("../models/User.model");
 const Event = require("../models/Event.model");
 
@@ -62,7 +64,7 @@ router.get("/details/:eventid", isAuthenticated, async (req, res, next) => {
 });
 
 // PATCH "/api/event/:eventid" => modificar un event por su id
-router.patch("/:eventid", isAuthenticated, async (req, res, next) => {
+router.patch("/:eventid", isAuthenticated,  async (req, res, next) => {
   const { eventid } = req.params;
   const { location } = req.body;
 
