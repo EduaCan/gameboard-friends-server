@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const isAuthenticated = require("../middlewares/auth.middlewares");
-const isAdmin = require("../middlewares/isAdmin.middlewares");
 
 const User = require("../models/User.model");
 const Event = require("../models/Event.model");
