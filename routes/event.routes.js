@@ -3,7 +3,7 @@ const isAuthenticated = require("../middlewares/auth.middlewares");
 
 const User = require("../models/User.model");
 const Event = require("../models/Event.model");
-
+//
 // POST "/api/event/:gameid" => crear un evento y agregar a la BD
 router.post("/:gameid", isAuthenticated, async (req, res, next) => {
   const { location } = req.body;
