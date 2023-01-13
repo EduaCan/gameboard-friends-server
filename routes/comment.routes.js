@@ -7,7 +7,6 @@ router.get("/game/:gameid", isAuthenticated, async (req, res, next) => {
   const { gameid } = req.params;
   try {
     const response = await Comment.find({ idGame: gameid }).populate("idUser");
-    console.log("COMMENTS", response);
     res.status(200).json(response);
   } catch (error) {
     next(error);

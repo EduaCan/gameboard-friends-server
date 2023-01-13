@@ -80,14 +80,14 @@ router.post("/login", async (req, res, next) => {
     // Validar que el nombre de usuario exista
     const foundUser = await User.findOne({ username: username });
     if (foundUser === null) {
-      res.status(400).json({ errorMessage: "Wrong credentials U" }); //! quitar U
+      res.status(400).json({ errorMessage: "Wrong credentials" }); 
       return;
     }
 
     // Validar que la contraseña sea correcta
     const isPasswordValid = await bcrypt.compare(password, foundUser.password);
     if (isPasswordValid === false) {
-      res.status(400).json({ errorMessage: "Wrong credentials P" }); //! quitar P
+      res.status(400).json({ errorMessage: "Wrong credentials" });
       return;
     }
     //Definimos payload con la información relevante del usuario
@@ -114,6 +114,8 @@ router.post("/login", async (req, res, next) => {
 router.patch("/newpassword", isAuthenticated, async (req, res, next) => {
   const { oldPassword, password, password2 } = req.body;
 
+  console.log(oldPassword, password, password2)
+
   // Validar que todos los campos esten llenos
   if (!oldPassword || !password || !password2) {
     res.status(400).json({ errorMessage: "You must fill all the fields" });
@@ -121,7 +123,7 @@ router.patch("/newpassword", isAuthenticated, async (req, res, next) => {
   }
   // Coincidan las dos contraseñas
   if (password !== password2) {
-    res.status(400).json({ errorMessage: "Passwords don't match" });
+    res.status(400).json({ errorMessage: "New passwords don't match" });
     return;
   }
   // Fortaleza de la contraseña
@@ -144,7 +146,7 @@ router.patch("/newpassword", isAuthenticated, async (req, res, next) => {
       foundUser.password
     );
     if (isPasswordValid === false) {
-      res.status(400).json({ errorMessage: "Wrong old Password" }); //! quitar P
+      res.status(400).json({ errorMessage: "Wrong old Password" }); 
       return;
     }
 
